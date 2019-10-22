@@ -1,58 +1,52 @@
 <template>
-    <div id="root">
+   <div>
 
-        <div class="my-2">
-            <v-btn small>Load Hotels</v-btn>
-        </div>
+            <v-flex  
+                    v-for="(hotel,idHotel) in hotels"
+                    :key="idHotel"
+                >
 
-        <v-container>
-            <!-- optional paragraph in case no output -->
-            <div>
-                <p v-if="!hotels.length">An error occured.</p>
-            </div>
+            <v-card class="d-inline-block mx-auto">
+            <v-container>
+            <v-row justify="space-between">
+                <v-col cols="auto">
+                <v-img
+                    height="600"
+                    width="600"
+                    :src="hotel.images[0]"
+                ></v-img>
+                </v-col>
 
-            <!-- hotel container -->
-            <v-layout class="justify-center">
-            <v-flex
-                class="pb-2 input-parent"
-                xs10
-                offset-xs1
-                v-for="(hotel,idHotel) in hotels"
-                :key="idHotel"
-            >
-                <!-- photo container -->
-                <v-layout align-center>
-                <v-flex class="card">
-                    <v-card class="action">
-                        <v-img :src="hotel.images[0]"></v-img>
-                    </v-card>
-                </v-flex>
-                </v-layout>
+                <v-col
+                cols="auto"
+                class="text-center pl-0"
+                >
+                <v-row
+                    class="flex-column ma-0 fill-height"
+                    justify="center"
+                >
+                    <v-col class="px-0">
+                        <h2>{{ hotel.name }}</h2>
+                    </v-col>
 
-                <!-- info container -->
-                 <v-layout align-center>
-                <v-flex class="card">
-                    <v-card height="100%" class="action">
-                    <v-layout column pl-3 pt-1>
-                        <v-flex>
-                            <h2>{{ hotel.name }}</h2>
-                            <h3>{{ hotel.city }} - {{ hotel.country}}</h3>
-                            <p>{{ hotel.description }}</p>
-                            <p>{{ hotel.price }} €</p>
-                        </v-flex>
-                    </v-layout>
-                    </v-card>
-                </v-flex>
-                </v-layout>
-            </v-flex>
-            </v-layout>
-        </v-container>
+                    <v-col class="px-0">
+                        <h3> {{ hotel.city }} - {{ hotel.country}}</h3>
+                    </v-col>
+
+                    <v-col class="px-0">
+                        <p>{{ hotel.description }}</p>
+                        <p>{{ hotel.price }} €</p>
+                    </v-col>
+                </v-row>
+                </v-col>
+            </v-row>
+            </v-container>
+        </v-card>
+
+        </v-flex>
 
 
-      
-
-
-    </div>
+</div>
 </template>
 
 
@@ -85,12 +79,9 @@ export default {
 
 
 
-
-
-
-
-
-
 <style>
+
+
+
 
 </style>
