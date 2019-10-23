@@ -14,7 +14,7 @@
                 outlined
             >
                 <div class="d-flex flex-row">
-                    <div >
+                    <div>
                         <v-img
                             height="200"
                             width="200"
@@ -31,12 +31,13 @@
                             </v-list-item-content>
                         </v-list-item>
 
-                        <div class="d-flex flex-row justify-space-around">
+                        <div class="d-flex flex-row justify-space-around align-center">
                             <v-card-actions>
                                 <v-btn text>Show Reviews</v-btn>
                             </v-card-actions>
 
-                            <h4 class="">{{ hotel.price }} €</h4>
+                            <h4 class="align-center ">{{ hotel.price }} €</h4>
+                            <!-- <p class="align-center ">{{ hotel.date_start }} - {{ hotel.date_end }}</p> -->
                         </div>
 
                     </div>
