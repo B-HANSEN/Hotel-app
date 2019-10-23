@@ -1,55 +1,53 @@
 <template>
-   <div>
+   <div class="d-flex flex-column">
 
-            <v-flex  
-                    v-for="(hotel,idHotel) in hotels"
-                    :key="idHotel"
-                >
+        <v-btn text mb-5>Load Hotels</v-btn>
 
-            <v-card class="d-inline-block mx-auto">
-            <v-container>
-            <v-row justify="space-between">
-                <v-col cols="auto">
-                <v-img
-                    height="600"
-                    width="600"
-                    :src="hotel.images[0]"
-                ></v-img>
-                </v-col>
+        <v-flex  
+            v-for="(hotel,idHotel) in hotels"
+            :key="idHotel"
+        >
 
-                <v-col
-                cols="auto"
-                class="text-center pl-0"
-                >
-                <v-row
-                    class="flex-column ma-0 fill-height"
-                    justify="center"
-                >
-                    <v-col class="px-0">
-                        <h2>{{ hotel.name }}</h2>
-                    </v-col>
+            <v-card
+                class="mx-auto"
+                max-width="800"
+                outlined
+            >
+                <div class="d-flex flex-row">
+                    <div >
+                        <v-img
+                            height="200"
+                            width="200"
+                            :src="hotel.images[0]"
+                        ></v-img>
+                    </div>
 
-                    <v-col class="px-0">
-                        <h3> {{ hotel.city }} - {{ hotel.country}}</h3>
-                    </v-col>
+                    <div>
+                        <v-list-item three-line>
+                            <v-list-item-content>
+                                <div class="overline mb-4">{{ hotel.name }}</div>
+                                <v-list-item-title class="headline mb-1">{{ hotel.city }} - {{ hotel.country}}</v-list-item-title>
+                                <v-list-item-subtitle>{{ hotel.description }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
 
-                    <v-col class="px-0">
-                        <p>{{ hotel.description }}</p>
-                        <p>{{ hotel.price }} €</p>
-                    </v-col>
-                </v-row>
-                </v-col>
-            </v-row>
-            </v-container>
-        </v-card>
+                        <div class="d-flex flex-row justify-space-around">
+                            <v-card-actions>
+                                <v-btn text>Show Reviews</v-btn>
+                            </v-card-actions>
 
-        </v-flex>
+                            <h4 class="">{{ hotel.price }} €</h4>
+                        </div>
 
+                    </div>
+                </div>
 
-</div>
+            </v-card>
+
+        </v-flex>   
+
+    </div>
 </template>
-
-
 
 
 
@@ -80,8 +78,4 @@ export default {
 
 
 <style>
-
-
-
-
 </style>
