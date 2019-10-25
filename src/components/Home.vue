@@ -8,6 +8,7 @@
             :key="idHotel"
         >
 
+<!-- ==================== HOTEL CONTAINER ====================-->
             <v-card
                 class="mx-auto"
                 max-width="800"
@@ -33,21 +34,49 @@
 
                         <div class="d-flex flex-row justify-space-around align-center">
                             <v-card-actions>
-                                <v-btn text>Show Reviews</v-btn>
+                                <v-btn v-if="!show" @click="toggleButton" text>Show Reviews</v-btn>
                             </v-card-actions>
 
                             <h4 class="align-center ">{{ hotel.price }} €</h4>
                             <!-- <p class="align-center ">{{ hotel.date_start }} - {{ hotel.date_end }}</p> -->
                         </div>
-
                     </div>
                 </div>
-
             </v-card>
+        </v-flex>
 
-        </v-flex>   
+<!-- ==================== REVIEW CONTAINER ====================-->
 
+        <v-flex  
+            v-for="(review,idHotel) in reviews"
+            :key="idHotel"
+        >
+
+            <v-card
+                class="mx-auto"
+                max-width="800"
+                outlined
+            >
+
+                <div  class="d-flex flex-row">
+                    <div>
+                        <p>{{ review.positive }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <h2>{{ review.name }}
+                        </h2>
+
+                        <h4>{{ review.comment }}
+                        </h4>
+                    </div>
+                </div>
+            </v-card>
+        </v-flex>
+                   
     </div>
+
 </template>
 
 
@@ -59,7 +88,9 @@ export default {
     data() {
         return {
             hotels: [],
-            errors: []
+            reviews: [],
+            errors: [],
+            show: false,
         }
     },
 
@@ -70,6 +101,13 @@ export default {
                 console.log(this.hotels)
             })
             .catch( error => { console.log(error) } );
+        
+        axios.get('http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}')
+                .then(response => {
+                    this.reviews = response.data
+                    console.log(this.reviews)
+                })
+                .catch( error => { console.log(error) } );
     }
 };
 
