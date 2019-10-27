@@ -9,17 +9,18 @@
         <v-flex  
             v-for="(hotel,idHotel) in hotels"
             :key="idHotel"
+            
         >
 <!-- ==================== HOTEL CONTAINER ==================== -->
             <v-card
-                class="mx-auto"
-                max-width="800"
+                class="mx-auto mb-2"
+                max-width="98%"
+               
                 outlined
             >
                 <div class="d-flex flex-row">
-                    <div>
+                    <div :aspect-ratio="16/9">
                         <v-img
-                            height="200"
                             width="200"
                             :src="hotel.images[0]"
                         ></v-img>
@@ -29,7 +30,7 @@
                         <v-list-item three-line>
                             <v-list-item-content>
                                 <v-layout row justify-space-between>
-                                    <div class="overline">{{ hotel.name }}</div>
+                                    <div class="title pl-3">{{ hotel.name }}</div>
                                     <div class="text-center mr-5"> 
                                             <v-rating v-model="rating" size="16" :dense="dense" background-color="black" color="black"
                                             :show-rating="true" @current-rating="showCurrentRating"
@@ -39,7 +40,7 @@
                                             </v-rating>
                                     </div>
                                 </v-layout> 
-                                <v-list-item-title class="headline mb-1">{{ hotel.city }} - {{ hotel.country }}</v-list-item-title>
+                                <v-list-item-title class="subtitle-2 mb-1">{{ hotel.city }} - {{ hotel.country }}</v-list-item-title>
                             
                                 <v-list-item-subtitle>{{ hotel.description }}</v-list-item-subtitle>
                             </v-list-item-content>
@@ -99,17 +100,22 @@
 
 <!-- ===================++= ERROR CONTAINER =========++=========== -->
         <v-container v-if="errorMsg">
-            <div>
-            <h5 class="errorfield">An error occured</h5>
-            </div>
+                <h5 class="errorfield">An error occured</h5>
         </v-container>
 
+        <!-- button to top -->
+        <back-to-top bottom="5px" right="100px" visibleoffset="120px">
+            <button type="button" class="btn btn-info btn-to-top">
+                <i class="fas fa-angle-double-up"></i>
+            </button>
+        </back-to-top>
     </div>
 </template>
 
 
 <script>
 import axios from 'axios';
+import BackToTop from "vue-backtotop";
 
 export default {
     data() {
@@ -128,6 +134,7 @@ export default {
             errorMsg: false
         }
     },
+    components: { BackToTop },
 
     // props: ["id: hotel_id"],
 
@@ -137,10 +144,9 @@ export default {
             const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
             this.hotels = response.data;
             this.showData = true
+            this.errorMsg = false
             console.log(this.hotels)
             return this.hotels;
-           
-           
             } catch (error) {
                 this.showData = false
                 this.errorMsg = true
@@ -184,5 +190,14 @@ export default {
     background-color: #c7c7c7;
     padding: 5px;
     border: 1px solid darkgrey;
+}
+
+.btn-to-top {
+  width: 40px;
+  height: 40px;
+  border: 1px solid lightgrey;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 22px;
 }
 </style>
