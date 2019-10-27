@@ -97,9 +97,10 @@
           <!-- <v-spacer></v-spacer> -->
            
 
+<!-- ===================++= ERROR CONTAINER =========++=========== -->
         <v-container v-if="errorMsg">
-            <div class="text-xs-center">
-            <h2>An error occured</h2>
+            <div>
+            <h5 class="errorfield">An error occured</h5>
             </div>
         </v-container>
 
@@ -131,24 +132,28 @@ export default {
     // props: ["id: hotel_id"],
 
     methods: {
-        handleLoad() {
-            axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
-                        .then(response => {
-                            this.hotels = response.data
-                            console.log(this.hotels)
-                            console.log(this.hotels[0].id)
-                            this.showData = true
-                        })
-                        .catch( error => { console.log(error) } ); 
-                            this.showData = false
-                            this.errorMsg = true
+        async handleLoad() {
+            try {
+            const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
+            this.hotels = response.data;
+            this.showData = true
+            console.log(this.hotels)
+            return this.hotels;
+           
+           
+            } catch (error) {
+                this.showData = false
+                this.errorMsg = true
+            }
         },
 
+// TODO: how to load ratings into v-rating ???
         showCurrentRating() {
             this.hotel.stars = this.stars
             this.currentRating = this.hotel.stars
         },
 
+// TODO: how to load review component and send ID ???
         handleReview(id) {  
             this.show = !this.show;
             this.button.text = !this.show ? "Show Reviews" : "Hide Reviews";
@@ -172,4 +177,12 @@ export default {
 </script>
 
 <style>
+.errorfield {
+    width: 95%;
+    margin: auto;
+    color: #5d5757;
+    background-color: #c7c7c7;
+    padding: 5px;
+    border: 1px solid darkgrey;
+}
 </style>
