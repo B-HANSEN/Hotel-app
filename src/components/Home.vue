@@ -28,8 +28,15 @@
                     <div>
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div class="overline mb-4">{{ hotel.name }}</div>
-                                <v-list-item-title class="headline mb-1">{{ hotel.city }} - {{ hotel.country}}</v-list-item-title>
+                                <v-layout row justify-space-between>
+                                    <div class="overline">{{ hotel.name }}</div>
+                                    <div class="text-center mr-5"> 
+                                            <v-rating v-model="rating" size="16" dense="true" background-color="black" color="grey">{{ hotel.stars }}                                                
+                                            </v-rating>
+                                    </div>
+                                </v-layout> 
+                                <v-list-item-title class="headline mb-1">{{ hotel.city }} - {{ hotel.country }}</v-list-item-title>
+                            
                                 <v-list-item-subtitle>{{ hotel.description }}</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
