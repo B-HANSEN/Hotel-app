@@ -5,7 +5,7 @@
             <v-btn @click="this.handleLoad" outlined text>Load Hotels</v-btn>
         </div>
 
-        <v-container v-if="!noData">
+        <v-container v-if="showData">
         <v-flex  
             v-for="(hotel,idHotel) in hotels"
             :key="idHotel"
@@ -31,7 +31,11 @@
                                 <v-layout row justify-space-between>
                                     <div class="overline">{{ hotel.name }}</div>
                                     <div class="text-center mr-5"> 
-                                            <v-rating v-model="rating" size="16" dense="true" background-color="black" color="grey">{{ hotel.stars }}                                                
+                                            <v-rating v-model="rating" size="16" :dense="dense" background-color="black" color="black"
+                                            :show-rating="true" @current-rating="showCurrentRating"
+                                            :readonly="readonly"
+                                            >
+                                               {{ hotel.stars }}                                             
                                             </v-rating>
                                     </div>
                                 </v-layout> 
@@ -93,7 +97,7 @@
           <!-- <v-spacer></v-spacer> -->
            
 
-        <v-container v-else>
+        <v-container v-if="errorMsg">
             <div class="text-xs-center">
             <h2>An error occured</h2>
             </div>
@@ -115,10 +119,12 @@ export default {
             show: false,
             id: "",
             hotel_id: "",
-            noData: false,
-            button: {
-                text: "Show Reviews"
-            }
+            button: { text: "Show Reviews" },
+            dense: true,
+            rating: 0,
+            readonly: true,
+            showData: false,
+            errorMsg: false
         }
     },
 
@@ -131,15 +137,18 @@ export default {
                             this.hotels = response.data
                             console.log(this.hotels)
                             console.log(this.hotels[0].id)
-                            if (response.data.Response === 'True') {
-                                this.movieResponse = response.data.Search
-                                this.noData = true
-                            } else {
-                                this.noData = false
-                            }
+                            this.showData = true
                         })
-                        .catch( error => { console.log(error) } );
+                        .catch( error => { console.log(error) } ); 
+                            this.showData = false
+                            this.errorMsg = true
         },
+
+        showCurrentRating() {
+            this.hotel.stars = this.stars
+            this.currentRating = this.hotel.stars
+        },
+
         handleReview(id) {  
             this.show = !this.show;
             this.button.text = !this.show ? "Show Reviews" : "Hide Reviews";
