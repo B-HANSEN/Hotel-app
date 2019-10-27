@@ -1,8 +1,11 @@
 <template>
      <div class="d-flex flex-column">
 
-        <v-btn text mb-5>Load Hotels</v-btn>
+        <div class="text-center mt-5">
+            <v-btn @click="this.handleLoad" outlined text>Load Hotels</v-btn>
+        </div>
 
+        <v-container v-if="!noData">
         <v-flex  
             v-for="(hotel,idHotel) in hotels"
             :key="idHotel"
@@ -34,11 +37,10 @@
                         <div class="d-flex flex-row justify-space-around align-center">
                             <v-card-actions>
                                 <v-btn
-                                   @click="toggleButton">{{ button.text }}
+                                   @click="this.handleReview(hotels.id)">{{ button.text }}
                                 </v-btn>
-                            <!-- <v-spacer></v-spacer> -->
                             </v-card-actions>
-
+                        
                             <h4 class="align-center ">{{ hotel.price }} €</h4>
                             <!-- <p class="align-center ">{{ hotel.date_start }} - {{ hotel.date_end }}</p> -->
                         </div>
@@ -46,9 +48,11 @@
    
                 </div>
 
+<!-- ==================== REVIEW CONTAINER ==================== -->
+                 <v-card>
                     <v-flex
-                        v-for="(review,idHotel) in reviews"
-                        :key="idHotel"
+                        v-for="review in reviews"
+                        :key="review.hotel_id"
                     >
 
                         <v-card
@@ -75,14 +79,21 @@
 
                         </v-card>
                     </v-flex>
-                
+                </v-card>
             </v-card>
         </v-flex>
+        </v-container>
           <!-- <v-spacer></v-spacer> -->
            
+
+        <v-container v-else>
+            <div class="text-xs-center">
+            <h2>An error occured</h2>
+            </div>
+        </v-container>
+
     </div>
 </template>
-
 
 
 <script>
@@ -95,41 +106,54 @@ export default {
             reviews: [],
             errors: [],
             show: false,
+            id: "",
+            hotel_id: "",
+            noData: false,
             button: {
                 text: "Show Reviews"
             }
         }
     },
 
-    created() {
-        axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
-            .then(response => {
-                this.hotels = response.data
-                console.log(this.hotels)
-            })
-            .catch( error => { console.log(error) } );
-        
-    },
-    mounted() {
-        axios.get('http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}')
-            .then(response => {
-                this.reviews = response.data
-                console.log(this.reviews)
-            })
-            .catch( error => { console.log(error) } );
-    },
+    // props: ["id: hotel_id"],
+
     methods: {
-        toggleButton() {
+        handleLoad() {
+            axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
+                        .then(response => {
+                            this.hotels = response.data
+                            console.log(this.hotels)
+                            console.log(this.hotels[0].id)
+                            if (response.data.Response === 'True') {
+                                this.movieResponse = response.data.Search
+                                this.noData = true
+                            } else {
+                                this.noData = false
+                            }
+                        })
+                        .catch( error => { console.log(error) } );
+        },
+        handleReview(id) {  
             this.show = !this.show;
             this.button.text = !this.show ? "Show Reviews" : "Hide Reviews";
+            
+            this.hotels_id = id;
+            console.log(this.hotel_id)
+            console.log(event.target.id)
+
+            axios.get('http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${this.hotel_id}')
+                .then(response => {
+                    this.reviews = response.data
+                    console.log(this.reviews)
+                })
+                .catch( error => { console.log(error) } );
         }
     }
-};
+}
+
+
 
 </script>
-
-
-
 
 <style>
 </style>
