@@ -1,5 +1,5 @@
 <template>
-   <div class="d-flex flex-column">
+     <div class="d-flex flex-column">
 
         <v-btn text mb-5>Load Hotels</v-btn>
 
@@ -7,8 +7,7 @@
             v-for="(hotel,idHotel) in hotels"
             :key="idHotel"
         >
-
-<!-- ==================== HOTEL CONTAINER ====================-->
+<!-- ==================== HOTEL CONTAINER ==================== -->
             <v-card
                 class="mx-auto"
                 max-width="800"
@@ -34,49 +33,54 @@
 
                         <div class="d-flex flex-row justify-space-around align-center">
                             <v-card-actions>
-                                <v-btn v-if="!show" @click="toggleButton" text>Show Reviews</v-btn>
+                                <v-btn
+                                   @click="toggleButton">{{ button.text }}
+                                </v-btn>
+                            <!-- <v-spacer></v-spacer> -->
                             </v-card-actions>
 
                             <h4 class="align-center ">{{ hotel.price }} €</h4>
                             <!-- <p class="align-center ">{{ hotel.date_start }} - {{ hotel.date_end }}</p> -->
                         </div>
                     </div>
+   
                 </div>
+
+                    <v-flex
+                        v-for="(review,idHotel) in reviews"
+                        :key="idHotel"
+                    >
+
+                        <v-card
+                            v-if="show"
+                            class="mx-auto"
+                            max-width="800"
+                            outlined
+                        >
+
+                        <v-expand-transition>
+                            <v-show="show">
+
+                            <div class="d-flex flex-row">
+                                    <div>
+                                        <p>{{ review.positive }}</p>
+                                    </div>
+
+                                    <div>
+                                        <h5>{{ review.name }}</h5>
+                                        <h6>{{ review.comment }}</h6>
+                                    </div>
+                            </div>
+                        </v-expand-transition>
+
+                        </v-card>
+                    </v-flex>
+                
             </v-card>
         </v-flex>
-
-<!-- ==================== REVIEW CONTAINER ====================-->
-
-        <v-flex  
-            v-for="(review,idHotel) in reviews"
-            :key="idHotel"
-        >
-
-            <v-card
-                class="mx-auto"
-                max-width="800"
-                outlined
-            >
-
-                <div  class="d-flex flex-row">
-                    <div>
-                        <p>{{ review.positive }}
-                        </p>
-                    </div>
-
-                    <div>
-                        <h2>{{ review.name }}
-                        </h2>
-
-                        <h4>{{ review.comment }}
-                        </h4>
-                    </div>
-                </div>
-            </v-card>
-        </v-flex>
-                   
+          <!-- <v-spacer></v-spacer> -->
+           
     </div>
-
 </template>
 
 
@@ -91,10 +95,13 @@ export default {
             reviews: [],
             errors: [],
             show: false,
+            button: {
+                text: "Show Reviews"
+            }
         }
     },
 
-    mounted() {
+    created() {
         axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
             .then(response => {
                 this.hotels = response.data
@@ -102,12 +109,20 @@ export default {
             })
             .catch( error => { console.log(error) } );
         
+    },
+    mounted() {
         axios.get('http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}')
-                .then(response => {
-                    this.reviews = response.data
-                    console.log(this.reviews)
-                })
-                .catch( error => { console.log(error) } );
+            .then(response => {
+                this.reviews = response.data
+                console.log(this.reviews)
+            })
+            .catch( error => { console.log(error) } );
+    },
+    methods: {
+        toggleButton() {
+            this.show = !this.show;
+            this.button.text = !this.show ? "Show Reviews" : "Hide Reviews";
+        }
     }
 };
 
