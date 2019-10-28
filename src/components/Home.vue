@@ -14,7 +14,7 @@
 <!-- ==================== HOTEL CONTAINER ==================== -->
             <v-card
                 class="mx-auto mb-2"
-                max-width="98%"
+                max-width="95%"
                
                 outlined
             >
@@ -46,18 +46,20 @@
                             </v-list-item-content>
                         </v-list-item>
 
-                        <div class="d-flex flex-row justify-space-around align-center">
+                        <div class="d-flex flex-row justify-space-between align-center px-3">
                             <v-card-actions>
                                 <v-btn
                                    @click="this.handleReview(hotels.id)">{{ button.text }}
                                 </v-btn>
                             </v-card-actions>
                         
-                            <h4 class="align-center ">{{ hotel.price }} €</h4>
-                            <!-- <p class="align-center ">{{ hotel.date_start }} - {{ hotel.date_end }}</p> -->
+                            <div class="pricetime">
+                                <h4 class="align-self-end">{{ hotel.price }} €</h4>
+                                <span>{{ [ hotel.date_start ] | moment("DD.MM.YYYY") }} - {{ [ hotel.date_end ] | moment("DD.MM.YYYY") }}</span>
+                            </div>
+
                         </div>
                     </div>
-   
                 </div>
 
 <!-- ==================== REVIEW CONTAINER ==================== -->
@@ -131,7 +133,10 @@ export default {
             rating: 0,
             readonly: true,
             showData: false,
-            errorMsg: false
+            errorMsg: false,
+            startDate: "",
+            endDate: "",
+            date: ""
         }
     },
     components: { BackToTop },
@@ -153,7 +158,7 @@ export default {
             }
         },
 
-// TODO: how to load ratings into v-rating ???
+// TODO: how to load ratings from JSON into v-rating ???
         showCurrentRating() {
             this.hotel.stars = this.stars
             this.currentRating = this.hotel.stars
@@ -190,6 +195,16 @@ export default {
     background-color: #c7c7c7;
     padding: 5px;
     border: 1px solid darkgrey;
+}
+
+.pricetime {
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+
+.pricetime >span {
+    font-size: 10px;
 }
 
 .btn-to-top {
