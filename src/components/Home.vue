@@ -18,11 +18,14 @@
                 outlined
             >
                 <div class="d-flex flex-row">
+                    <v-container fluid class="photocontainer">
                     <v-img
-                        width="300"
-                        :aspect-ratio="4/3"
                         :src="hotel.images[0]"
+                        :aspect-ratio="1.3333"
+                        max-width="266px"
+                        max-height="200px"
                     ></v-img>
+                    </v-container>
 
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row justify-space-between">
@@ -140,7 +143,7 @@ export default {
     methods: {
         async handleLoad() {
             try {
-                const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
+                const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels?count=5')
                 this.hotels = response.data;
                 this.showData = true
                 this.errorMsg = false
@@ -168,6 +171,15 @@ export default {
 </script>
 
 <style>
+.photocontainer {
+    height: "200px";
+    padding: 0px !important;
+}
+
+.container--fluid {
+    max-width: 35% !important;
+}
+
 .description {
     font-size: 11px;
 }
