@@ -12,7 +12,7 @@
         >
 <!-- ==================== HOTEL CONTAINER ==================== -->
             <v-card
-                class="mx-auto mb-2 grey lighten-3"
+                class="mx-auto mb-2 grey lighten-2"
                 max-width="95%"
                
                 outlined
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <div class="subtitle-2 pl-3 mb-1">{{ hotel.city }} - {{ hotel.country }}</div>
+                        <div class="subtitle-2 pl-3">{{ hotel.city }} - {{ hotel.country }}</div>
                     
                         <v-list-item three-line class="description">{{ hotel.description }}
                         </v-list-item>
@@ -73,15 +73,14 @@
                 
 
 <!-- ==================== REVIEW CONTAINER ===================== -->
-                 <v-card class="grey lighten-1" v-if="show == hotel.id">
+                 <v-card class="grey lighten-1 py-4" v-if="show == hotel.id">
                     <v-flex
                         v-for="review in reviews"
                         :key="review.hotel_id"
-                        class="mb-1"
                     >
 
                         <v-card
-                            class="mx-auto grey lighten-1"
+                            class="grey lighten-1"
                             max-width="100%"
                             outlined
                         >
@@ -89,10 +88,14 @@
                         <v-expand-transition >
                             <v-show="show">
 
-                            <div class="d-flex flex-row my-2">
-                                <p class="positive align-self-center mx-4 grey lighten-3" v-if="review.positive == true">+</p>
-                                <p class="positive align-self-center mx-4 grey lighten-3" v-else>-</p>
-                                
+                            <div class="d-flex flex-row">
+                                    <i class="material-icons positive align-self-center mx-4 grey lighten-2" v-if="review.positive == true">
+                                    add
+                                    </i>
+                               
+                                    <i class="material-icons positive align-self-center mx-4 grey lighten-2" v-else>
+                                    remove
+                                    </i>
                                 <div>
                                     <h6>{{ review.name }}</h6>
                                     <p class="comments">{{ review.comment }}</p>
@@ -218,8 +221,10 @@ export default {
 }
 
 .positive {
+    size: 20px;
     border: 2px solid black;
     border-radius: 50%;
+    margin-bottom: 14px;
 }
 
 .comments {
