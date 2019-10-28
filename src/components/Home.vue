@@ -1,7 +1,8 @@
 <template>
      <div class="d-flex flex-column">
 
-        <div class="text-center mt-5">
+<!-- ================ LOAD HOTELS BUTTON ============= -->
+        <div class="text-center my-5">
             <v-btn @click="this.handleLoad" outlined text>Load Hotels</v-btn>
         </div>
 
@@ -10,28 +11,24 @@
             v-for="(hotel,id) in hotels"
             :key="id"
         >
-<!-- ==================== HOTEL CONTAINER ==================== -->
+<!-- ========================== HOTEL CONTAINER ========================== -->
             <v-card
                 class="mx-auto mb-2 grey lighten-2"
                 max-width="95%"
-               
                 outlined
             >
                 <div class="d-flex flex-row">
-                    <div 
-                    :aspect-ratio="16/9"
-                    >
-                        <v-img
-                            width="200"
-                            :src="hotel.images[0]"
-                        ></v-img>
-                    </div>
+                    <v-img
+                        width="300"
+                        :aspect-ratio="4/3"
+                        :src="hotel.images[0]"
+                    ></v-img>
 
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row justify-space-between">
                             <div class="title pl-3">{{ hotel.name }}</div>
 
-<!-- ====================== STAR RATING ====================== -->
+<!-- ============== STAR RATING SECTION ============== -->
                             <div class="stars">
                                 <div 
                                     v-for="index in 5"
@@ -53,6 +50,7 @@
                         <v-list-item three-line class="description">{{ hotel.description }}
                         </v-list-item>
                  
+<!-- ================= REVIEW BUTTON ================= -->
                         <div class="d-flex flex-row justify-space-between align-center px-3">
                             <v-card-actions>
                                 <v-btn v-if="show == hotel.id"
@@ -63,6 +61,7 @@
                                 </v-btn>
                             </v-card-actions>
                         
+<!-- =========== PRICE & TIME RANGE SECTION ========== -->
                             <div class="pricetime">
                                 <h4 class="align-self-end">{{ hotel.price }} €</h4>
                                 <span>{{ [ hotel.date_start ] | moment("DD.MM.YYYY") }} - {{ [ hotel.date_end ] | moment("DD.MM.YYYY") }}</span>
@@ -70,39 +69,35 @@
                         </div>
                     </div>
                 </div>
-                
 
-<!-- ==================== REVIEW CONTAINER ===================== -->
+<!-- ========================= REVIEW CONTAINER ========================== -->
                  <v-card class="grey lighten-1 py-4" v-if="show == hotel.id">
                     <v-flex
                         v-for="review in reviews"
                         :key="review.hotel_id"
                     >
-
                         <v-card
                             class="grey lighten-1"
                             max-width="100%"
                             outlined
                         >
+                            <v-expand-transition >
+                                <v-show="show">
 
-                        <v-expand-transition >
-                            <v-show="show">
+                                    <div class="d-flex flex-row">
+                                        <i class="material-icons positive align-self-center mx-4 grey lighten-2"
+                                            v-if="review.positive == true">add
+                                        </i>
+                                        <i class="material-icons positive align-self-center mx-4 grey lighten-2"
+                                            v-else>remove
+                                        </i>
 
-                            <div class="d-flex flex-row">
-                                    <i class="material-icons positive align-self-center mx-4 grey lighten-2" v-if="review.positive == true">
-                                    add
-                                    </i>
-                               
-                                    <i class="material-icons positive align-self-center mx-4 grey lighten-2" v-else>
-                                    remove
-                                    </i>
-                                <div>
-                                    <h6>{{ review.name }}</h6>
-                                    <p class="comments">{{ review.comment }}</p>
-                                </div>
-                            </div>
-                        </v-expand-transition>
-
+                                        <div>
+                                            <h6>{{ review.name }}</h6>
+                                            <p class="comments">{{ review.comment }}</p>
+                                        </div>
+                                    </div>
+                            </v-expand-transition>
                         </v-card>
                     </v-flex>
                 </v-card>
@@ -110,12 +105,12 @@
         </v-flex>
         </v-container>           
 
-<!-- ====================== ERROR CONTAINER ====================== -->
+<!-- ========================== ERROR CONTAINER ========================== -->
         <v-container v-if="errorMsg">
                 <h5 class="errorfield">An error occured</h5>
         </v-container>
 
-<!-- ====================== BACK TO TOP ========================== -->
+<!-- =============== BACK TO TOP BUTTON ============== -->
         <back-to-top bottom="5px" right="100px" visibleoffset="120px">
             <button type="button" class="btn btn-info btn-to-top">
                 <i class="fas fa-angle-double-up"></i>
@@ -136,11 +131,6 @@ export default {
             reviews: [],
             errors: [],
             show: "",
-            id: "",
-            hotel_id: "",
-            button: { text: "Show Reviews" },
-            rating: 0,
-            readonly: true,
             showData: false,
             errorMsg: false
         }
@@ -150,11 +140,10 @@ export default {
     methods: {
         async handleLoad() {
             try {
-            const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
-            this.hotels = response.data;
-            this.showData = true
-            this.errorMsg = false
-            console.log(this.hotels)
+                const response = await axios.get('http://fake-hotel-api.herokuapp.com/api/hotels')
+                this.hotels = response.data;
+                this.showData = true
+                this.errorMsg = false
             return this.hotels;
             } catch (error) {
                 this.showData = false
@@ -162,18 +151,15 @@ export default {
             }
         },
 
-        handleReview(id) {  
-            console.log(id);
-          
+        async handleReview(id) {
             this.show == id ? this.show = "" : this.show = id;
-            
-            if(this.show.length !=0) {
-                    axios.get(`http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}`)
-                    .then(response => {
-                        this.reviews = response.data
-                        console.log(this.reviews)
-                    })
-                    .catch( error => { console.log(error) } );
+            if(this.show.length !=0)
+            try {
+                const response = await axios.get(`http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}`)
+                this.reviews = response.data;
+            return this.reviews;                
+            } catch (error) {
+               console.error(error);
             }
         }
     }
@@ -230,5 +216,4 @@ export default {
 .comments {
     font-size: 10px;
 }
-
 </style>
