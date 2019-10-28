@@ -32,12 +32,15 @@
                                 <v-layout row justify-space-between>
                                     <div class="title pl-3">{{ hotel.name }}</div>
                                     <div class="text-center mr-5"> 
-                                            <v-rating v-model="rating" size="16" :dense="dense" background-color="black" color="black"
+                                            <!-- <v-rating v-model="rating" size="16" :dense="dense" background-color="black" color="black"
                                             :show-rating="true" @current-rating="showCurrentRating"
                                             :readonly="readonly"
                                             >
                                                {{ hotel.stars }}                                             
-                                            </v-rating>
+                                            </v-rating> -->
+
+                                            <star-rating v-model="rating" @current-rating="setRating">{{ hotel.stars }}  </star-rating>
+
                                     </div>
                                 </v-layout> 
                                 <v-list-item-title class="subtitle-2 mb-1">{{ hotel.city }} - {{ hotel.country }}</v-list-item-title>
@@ -48,8 +51,11 @@
 
                         <div class="d-flex flex-row justify-space-between align-center px-3">
                             <v-card-actions>
-                                <v-btn
-                                   @click="this.handleReview(hotels.id)">{{ button.text }}
+                                <v-btn v-if="show == hotel.id"
+                                   @click="handleReview(hotel.id)">SHow more
+                                </v-btn>
+                                 <v-btn v-else
+                                   @click="handleReview(hotel.id)">Show less
                                 </v-btn>
                             </v-card-actions>
                         
@@ -63,14 +69,14 @@
                 </div>
 
 <!-- ==================== REVIEW CONTAINER ==================== -->
-                 <v-card>
+                 <v-card   v-if="show == hotel.id">
                     <v-flex
                         v-for="review in reviews"
                         :key="review.hotel_id"
                     >
 
                         <v-card
-                            v-if="show"
+                          
                             class="mx-auto"
                             max-width="800"
                             outlined
@@ -118,6 +124,7 @@
 <script>
 import axios from 'axios';
 import BackToTop from "vue-backtotop";
+import StarRating from 'vue-star-rating'
 
 export default {
     data() {
@@ -125,7 +132,7 @@ export default {
             hotels: [],
             reviews: [],
             errors: [],
-            show: false,
+            show: "",
             id: "",
             hotel_id: "",
             button: { text: "Show Reviews" },
@@ -133,13 +140,10 @@ export default {
             rating: 0,
             readonly: true,
             showData: false,
-            errorMsg: false,
-            startDate: "",
-            endDate: "",
-            date: ""
+            errorMsg: false
         }
     },
-    components: { BackToTop },
+    components: { BackToTop, StarRating },
 
     // props: ["id: hotel_id"],
 
@@ -159,21 +163,19 @@ export default {
         },
 
 // TODO: how to load ratings from JSON into v-rating ???
-        showCurrentRating() {
-            this.hotel.stars = this.stars
-            this.currentRating = this.hotel.stars
+         setRating: function(rating){
+            this.hotel.stars = rating;
         },
 
 // TODO: how to load review component and send ID ???
         handleReview(id) {  
-            this.show = !this.show;
-            this.button.text = !this.show ? "Show Reviews" : "Hide Reviews";
+            console.log(id);
             
-            this.hotels_id = id;
-            console.log(this.hotel_id)
-            console.log(event.target.id)
+            this.show =id;
+            this.button.text = this.show == id ? "Show Reviews" : "Hide Reviews";
+            
 
-            axios.get('http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${this.hotel_id}')
+            axios.get(`http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}`)
                 .then(response => {
                     this.reviews = response.data
                     console.log(this.reviews)
@@ -182,7 +184,6 @@ export default {
         }
     }
 }
-
 
 
 </script>
