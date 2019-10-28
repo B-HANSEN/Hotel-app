@@ -7,55 +7,59 @@
 
         <v-container v-if="showData">
         <v-flex  
-            v-for="(hotel,idHotel) in hotels"
-            :key="idHotel"
-            
+            v-for="(hotel,id) in hotels"
+            :key="id"
         >
 <!-- ==================== HOTEL CONTAINER ==================== -->
             <v-card
-                class="mx-auto mb-2"
+                class="mx-auto mb-2 grey lighten-3"
                 max-width="95%"
                
                 outlined
             >
                 <div class="d-flex flex-row">
-                    <div :aspect-ratio="16/9">
+                    <div 
+                    :aspect-ratio="16/9"
+                    >
                         <v-img
                             width="200"
                             :src="hotel.images[0]"
                         ></v-img>
                     </div>
 
-                    <div>
-                        <v-list-item three-line>
-                            <v-list-item-content>
-                                <v-layout row justify-space-between>
-                                    <div class="title pl-3">{{ hotel.name }}</div>
-                                    <div class="text-center mr-5"> 
-                                            <!-- <v-rating v-model="rating" size="16" :dense="dense" background-color="black" color="black"
-                                            :show-rating="true" @current-rating="showCurrentRating"
-                                            :readonly="readonly"
-                                            >
-                                               {{ hotel.stars }}                                             
-                                            </v-rating> -->
+                    <div class="d-flex flex-column">
+                        <div class="d-flex flex-row justify-space-between">
+                            <div class="title pl-3">{{ hotel.name }}</div>
 
-                                            <star-rating v-model="rating" @current-rating="setRating">{{ hotel.stars }}  </star-rating>
-
+<!-- ====================== STAR RATING ====================== -->
+                            <div class="stars">
+                                <div 
+                                    v-for="index in 5"
+                                    :key="index"
+                                >
+                                    <div v-if = "index <= hotel.stars">
+                                        <i class="fas fa-star"></i>
                                     </div>
-                                </v-layout> 
-                                <v-list-item-title class="subtitle-2 mb-1">{{ hotel.city }} - {{ hotel.country }}</v-list-item-title>
-                            
-                                <v-list-item-subtitle>{{ hotel.description }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
 
+                                    <div v-else>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="subtitle-2 pl-3 mb-1">{{ hotel.city }} - {{ hotel.country }}</div>
+                    
+                        <v-list-item three-line class="description">{{ hotel.description }}
+                        </v-list-item>
+                 
                         <div class="d-flex flex-row justify-space-between align-center px-3">
                             <v-card-actions>
                                 <v-btn v-if="show == hotel.id"
-                                   @click="handleReview(hotel.id)">SHow more
+                                    @click="handleReview(hotel.id)">Hide reviews
                                 </v-btn>
-                                 <v-btn v-else
-                                   @click="handleReview(hotel.id)">Show less
+                                    <v-btn v-else
+                                    @click="handleReview(hotel.id)">Show reviews
                                 </v-btn>
                             </v-card-actions>
                         
@@ -63,37 +67,36 @@
                                 <h4 class="align-self-end">{{ hotel.price }} €</h4>
                                 <span>{{ [ hotel.date_start ] | moment("DD.MM.YYYY") }} - {{ [ hotel.date_end ] | moment("DD.MM.YYYY") }}</span>
                             </div>
-
                         </div>
                     </div>
                 </div>
+                
 
-<!-- ==================== REVIEW CONTAINER ==================== -->
-                 <v-card   v-if="show == hotel.id">
+<!-- ==================== REVIEW CONTAINER ===================== -->
+                 <v-card class="grey lighten-1" v-if="show == hotel.id">
                     <v-flex
                         v-for="review in reviews"
                         :key="review.hotel_id"
+                        class="mb-1"
                     >
 
                         <v-card
-                          
-                            class="mx-auto"
-                            max-width="800"
+                            class="mx-auto grey lighten-1"
+                            max-width="100%"
                             outlined
                         >
 
-                        <v-expand-transition>
+                        <v-expand-transition >
                             <v-show="show">
 
-                            <div class="d-flex flex-row">
-                                    <div>
-                                        <p>{{ review.positive }}</p>
-                                    </div>
-
-                                    <div>
-                                        <h5>{{ review.name }}</h5>
-                                        <h6>{{ review.comment }}</h6>
-                                    </div>
+                            <div class="d-flex flex-row my-2">
+                                <p class="positive align-self-center mx-4 grey lighten-3" v-if="review.positive == true">+</p>
+                                <p class="positive align-self-center mx-4 grey lighten-3" v-else>-</p>
+                                
+                                <div>
+                                    <h6>{{ review.name }}</h6>
+                                    <p class="comments">{{ review.comment }}</p>
+                                </div>
                             </div>
                         </v-expand-transition>
 
@@ -102,16 +105,14 @@
                 </v-card>
             </v-card>
         </v-flex>
-        </v-container>
-          <!-- <v-spacer></v-spacer> -->
-           
+        </v-container>           
 
-<!-- ===================++= ERROR CONTAINER =========++=========== -->
+<!-- ====================== ERROR CONTAINER ====================== -->
         <v-container v-if="errorMsg">
                 <h5 class="errorfield">An error occured</h5>
         </v-container>
 
-        <!-- button to top -->
+<!-- ====================== BACK TO TOP ========================== -->
         <back-to-top bottom="5px" right="100px" visibleoffset="120px">
             <button type="button" class="btn btn-info btn-to-top">
                 <i class="fas fa-angle-double-up"></i>
@@ -124,7 +125,6 @@
 <script>
 import axios from 'axios';
 import BackToTop from "vue-backtotop";
-import StarRating from 'vue-star-rating'
 
 export default {
     data() {
@@ -136,16 +136,13 @@ export default {
             id: "",
             hotel_id: "",
             button: { text: "Show Reviews" },
-            dense: true,
             rating: 0,
             readonly: true,
             showData: false,
             errorMsg: false
         }
     },
-    components: { BackToTop, StarRating },
-
-    // props: ["id: hotel_id"],
+    components: { BackToTop },
 
     methods: {
         async handleLoad() {
@@ -162,33 +159,30 @@ export default {
             }
         },
 
-// TODO: how to load ratings from JSON into v-rating ???
-         setRating: function(rating){
-            this.hotel.stars = rating;
-        },
-
-// TODO: how to load review component and send ID ???
         handleReview(id) {  
             console.log(id);
+          
+            this.show == id ? this.show = "" : this.show = id;
             
-            this.show =id;
-            this.button.text = this.show == id ? "Show Reviews" : "Hide Reviews";
-            
-
-            axios.get(`http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}`)
-                .then(response => {
-                    this.reviews = response.data
-                    console.log(this.reviews)
-                })
-                .catch( error => { console.log(error) } );
+            if(this.show.length !=0) {
+                    axios.get(`http://fake-hotel-api.herokuapp.com/api/reviews?hotel_id=${id}`)
+                    .then(response => {
+                        this.reviews = response.data
+                        console.log(this.reviews)
+                    })
+                    .catch( error => { console.log(error) } );
+            }
         }
     }
 }
 
-
 </script>
 
 <style>
+.description {
+    font-size: 11px;
+}
+
 .errorfield {
     width: 95%;
     margin: auto;
@@ -216,4 +210,20 @@ export default {
   font-size: 22px;
   line-height: 22px;
 }
+
+.stars {
+    display: flex;
+    margin-right: 20px;
+    margin-top: 10px;
+}
+
+.positive {
+    border: 2px solid black;
+    border-radius: 50%;
+}
+
+.comments {
+    font-size: 10px;
+}
+
 </style>
