@@ -178,6 +178,7 @@ export default {
 
 .container--fluid {
     max-width: 35% !important;
+    margin: 0;
 }
 
 .description {
@@ -228,4 +229,5 @@ export default {
 .comments {
     font-size: 10px;
 }
+
 </style>
